@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import db.SessionDatabase;
 import db.UserDatabase;
 import dto.UserDTO;
+import exception.HeaderNotFoundException;
 import http.HttpRequest;
 import http.HttpResponse;
 import model.Session;
@@ -33,19 +34,41 @@ public class Logic {
     private static final String dynamicResourcePath = "src/main/resources/templates";
 
     public HttpResponse serve(HttpRequest request) throws JsonProcessingException {
-        switch (request.getPath()) {
-            case "/create":
-                return registration(request);
-            case "/login":
-                return login(request);
-            case "/login_fail":
-                return loginFail(request);
-            case "/user":
-                return responseUser(request);
-            case "/user/list/all":
-                return responseAllUser(request);
-            default:
-                return serveResource(request, staticResourcePath+request.getViewPath());
+        return switch (request.getPath()) {
+            case "/create" -> registration(request);
+            case "/login" -> login(request);
+            case "/login_fail" -> loginFail(request);
+            case "/user" -> responseUser(request);
+            case "/user/list/all" -> responseAllUser(request);
+            case "/article" -> {
+                if(!isLoggedIn(request)) yield HttpResponse.redirect("/login");
+                else yield serveResource(request, staticResourcePath+request.getViewPath());
+            }
+            default -> serveResource(request, staticResourcePath+request.getViewPath());
+        };
+    }
+
+    private boolean isLoggedIn(HttpRequest request) {
+        try{
+            String cookie = request.getHeaderValue("cookie");
+            int sidIdx = cookie.indexOf("sid");
+            if(sidIdx == -1) return false;
+
+            int sidValueIdx = cookie.indexOf("=", sidIdx) + 1;
+            int sidEndIdx = cookie.indexOf(";", sidValueIdx);
+            if (sidEndIdx == -1) {
+                sidEndIdx = cookie.length(); // ;가 없으면 문자열 끝까지
+            }
+
+            String sessionId = cookie.substring(sidValueIdx, sidEndIdx).trim();
+            Optional<Session> session = SessionDatabase.getSession(sessionId);
+            if(session.isEmpty()) return false;
+            Optional<User> userById = UserDatabase.findUserById(session.get().getUserId());
+            if(userById.isEmpty()) return false;
+
+            return true;
+        } catch(HeaderNotFoundException he){
+            return false;
         }
     }
 
