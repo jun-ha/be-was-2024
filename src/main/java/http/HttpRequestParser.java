@@ -47,7 +47,7 @@ public class HttpRequestParser {
             if (colonIndex == -1) {
                 throw new InvalidHttpRequestException("Invalid HTTP header: " + line);
             }
-            String key = line.substring(0, colonIndex).trim();
+            String key = line.substring(0, colonIndex).trim().toLowerCase();
             String value = line.substring(colonIndex + 1).trim();
             request.addHeader(key, value);
         }

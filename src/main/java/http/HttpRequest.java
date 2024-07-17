@@ -45,8 +45,9 @@ public class HttpRequest {
     }
 
     public String getHeaderValue(String headerName) {
-        if(headers.containsKey(headerName)) {
-            return headers.get(headerName);
+        String lowerCaseHeaderName = headerName.toLowerCase();
+        if(headers.containsKey(lowerCaseHeaderName)) {
+            return headers.get(lowerCaseHeaderName);
         } else throw new HeaderNotFoundException("Cannot find Header names :  " + headerName);
     }
 
