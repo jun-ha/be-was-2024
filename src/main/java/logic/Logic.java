@@ -40,12 +40,19 @@ public class Logic {
             case "/login_fail" -> loginFail(request);
             case "/user" -> responseUser(request);
             case "/user/list/all" -> responseAllUser(request);
-            case "/article" -> {
-                if(!isLoggedIn(request)) yield HttpResponse.redirect("/login");
-                else yield serveResource(request, staticResourcePath+request.getViewPath());
-            }
+            case "/article" -> articlePage(request);
             default -> serveResource(request, staticResourcePath+request.getViewPath());
         };
+    }
+
+    private HttpResponse articlePage(HttpRequest request) {
+        if(!isLoggedIn(request)) return HttpResponse.redirect("/login");
+        else {
+            if(request.getMethod().equals(POST)){
+
+            }
+            return serveResource(request, staticResourcePath + request.getViewPath());
+        }
     }
 
     private boolean isLoggedIn(HttpRequest request) {

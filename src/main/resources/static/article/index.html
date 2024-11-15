@@ -12,31 +12,37 @@
         <a href="/main"><img src="../img/signiture.svg" /></a>
         <ul class="header__menu">
           <li class="header__menu__item">
-            <a class="btn btn_contained btn_size_s" href="/article">글쓰기</a>
-          </li>
-          <li class="header__menu__item">
-            <button id="logout-btn" class="btn btn_ghost btn_size_s">
-              로그아웃
-            </button>
+            <a class="btn btn_logout btn_size_s" href="/" id="logoutBtn">로그아웃</a>
           </li>
         </ul>
       </header>
       <div class="page">
-        <h2 class="page-title">게시글 작성</h2>
-        <form class="form">
+        <h2 class="page-title" style="margin-top: -70px; margin-bottom: -50px">게시글 작성</h2>
+        <form class="form" method="post" action="/article">
+          <div class ="textfield textfield_size_s">
+                <p class="title_textfield">제목</p>
+                <textarea
+                        class="input_textfield_s"
+                        placeholder="제목을 입력하세요"
+                ></textarea>
+          </div>
           <div class="textfield textfield_size_m">
-            <p class="title_textfield">내용</p>
-            <textarea
-              class="input_textfield"
-              placeholder="글의 내용을 입력하세요"
-              autocomplete="username"
-            ></textarea>
+                <p class="title_textfield">내용</p>
+                <textarea
+                        class="input_textfield"
+                        placeholder="글의 내용을 입력하세요"
+                        autocomplete="username"
+                ></textarea>
+          </div>
+          <div class="textfield textfield_size_s">
+            <p class="title-textfield">이미지 업로드</p>
+            <input type="file" name="image" accept="image/*">
           </div>
           <button
             id="registration-btn"
             class="btn btn_contained btn_size_m"
-            style="margin-top: 24px"
-            type="button"
+            style="margin-top: 24px; margin-bottom: 24px"
+            type="submit"
           >
             작성 완료
           </button>
